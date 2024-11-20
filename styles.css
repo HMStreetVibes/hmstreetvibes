@@ -120,7 +120,7 @@ h1, h3 {
 }
 
 .popup {
-    display: none;
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -133,6 +133,7 @@ h1, h3 {
 }
 
 .popup-content {
+    display: flex;
     background-color: #303030;
     padding: 30px;
     border-radius: 10px;
@@ -143,10 +144,8 @@ h1, h3 {
     margin: 0 auto;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s, box-shadow 0.3s;
-    display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 50px;
 }
 
 .popup-content h2 {
