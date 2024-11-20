@@ -59,7 +59,6 @@ nav ul li a:hover {
     flex-direction: column;
 }
 
-/* Detalles del producto */
 h1, h3 {
     margin: 10px 0;
 }
@@ -120,7 +119,7 @@ h1, h3 {
 }
 
 .popup {
-    display: flex;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -147,6 +146,7 @@ h1, h3 {
     flex-direction: column;
     justify-content: space-between;
 }
+
 
 .popup-content h2 {
     margin: 0 0 10px;
