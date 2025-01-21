@@ -14,37 +14,62 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="hombre.html">Hombre</a></li>
                 <li><a href="mujer.html">Mujer</a></li>
+                <li><a href="compras.html">Carrito</a></li>
             </ul>
         </nav>
     </header>
     <div class="producto-detalle">
         <div class="imagen-producto">
             <img src="BeigeStyle.jpg" alt="Court Vision Low" width="350">
-
         </div>
         <div class="detalles-producto">
-            <h1>T-Shirt Hypemode Cartoon </h1>
-            <p>Playera de algodon basica para hombre
-                 con estampados cartoon.</p>
+            <h1>T-Shirt Hypemode Cartoon</h1>
+            <p>Playera de algodón básica para hombre con estampados cartoon.</p>
             <p class="precio">$159.90 MXN</p>
 
             <h3>Selecciona tu talla</h3>
             <div class="tallas">
-                <button>CH</button>
-                <button>M</button>
-                <button>G</button>
-                <button>XL</button>
+                <button onclick="seleccionarTalla('CH', this)">CH</button>
+                <button onclick="seleccionarTalla('M', this)">M</button>
+                <button onclick="seleccionarTalla('G', this)">G</button>
+                <button onclick="seleccionarTalla('XL', this)">XL</button>
             </div>
 
-            <button class="btn-compra">Agregar al carrito</button>
+            <button class="btn-compra" onclick="agregarAlCarrito()">Agregar al carrito</button>
         </div>
     </div>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <h2>¡Contactanos por WhatsApp para concretar tu pedido!</h2>
-            <button class="close-btn">Cerrar</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+    <script>
+        let tallaSeleccionada = null;
+
+        // Función para seleccionar una talla
+        function seleccionarTalla(talla, boton) {
+            // Guardar la talla seleccionada
+            tallaSeleccionada = talla;
+
+            // Eliminar la clase "talla-seleccionada" de todos los botones
+            const botones = document.querySelectorAll('.tallas button');
+            botones.forEach(btn => btn.classList.remove('talla-seleccionada'));
+
+            // Agregar la clase "talla-seleccionada" al botón seleccionado
+            boton.classList.add('talla-seleccionada');
+        }
+
+        // Función para agregar al carrito
+        function agregarAlCarrito() {
+            if (!tallaSeleccionada) {
+                alert("Por favor, selecciona una talla antes de agregar al carrito.");
+                return;
+            }
+            const producto = {
+                nombre: "T-Shirt Hypemode Cartoon",
+                precio: 159.90,
+                talla: tallaSeleccionada,
+            };
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            carrito.push(producto);
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            alert("Producto agregado al carrito.");
+        }
+    </script>
 </body>
 </html>
