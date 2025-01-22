@@ -19,33 +19,54 @@
     </header>
     <div class="producto-detalle">
         <div class="imagen-producto">
-            <img src="Two Pieces BN.jpg" alt="Court Vision Low" width="350">
-
+            <img src="Two Pieces BN.jpg" alt="Two Pieces Beige/Black" width="350">
         </div>
         <div class="detalles-producto">
             <h1>Two Pieces Beige/Black</h1>
-            <p>Par de playeras de algodon para hombre en dos 
-                colores, con estampado de rosa.
-            </p>
+            <p>Par de playeras de algodón para hombre en dos colores, con estampado de rosa.</p>
             <p class="precio">$319.00 MXN</p>
 
             <h3>Selecciona tu talla</h3>
             <div class="tallas">
-                <button>CH</button>
-                <button>M</button>
-                <button>G</button>
-                <button>XL</button>
+                <button onclick="seleccionarTalla('CH', this)">CH</button>
+                <button onclick="seleccionarTalla('M', this)">M</button>
+                <button onclick="seleccionarTalla('G', this)">G</button>
+                <button onclick="seleccionarTalla('XL', this)">XL</button>
             </div>
 
-            <button class="btn-compra">Agregar al carrito</button>
+            <button class="btn-compra" onclick="agregarAlCarrito()">Agregar al carrito</button>
         </div>
     </div>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <h2>¡Contactanos por WhatsApp para concretar tu pedido!</h2>
-            <button class="close-btn">Cerrar</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+    <script>
+        let tallaSeleccionada = null;
+
+        function seleccionarTalla(talla, boton) {
+            tallaSeleccionada = talla;
+
+            const botones = document.querySelectorAll('.tallas button');
+            botones.forEach(btn => btn.classList.remove('talla-seleccionada'));
+
+            boton.classList.add('talla-seleccionada');
+        }
+
+        function agregarAlCarrito() {
+            if (!tallaSeleccionada) {
+                alert("Por favor, selecciona una talla antes de agregar al carrito.");
+                return;
+            }
+
+            const producto = {
+                nombre: "Two Pieces Beige/Black",
+                precio: 319.00,
+                talla: tallaSeleccionada,
+            };
+
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            carrito.push(producto);
+
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            alert("Producto agregado al carrito.");
+        }
+    </script>
 </body>
 </html>

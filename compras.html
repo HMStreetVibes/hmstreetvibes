@@ -59,7 +59,7 @@
         .vaciar-carrito:hover {
             background-color: #d32f2f;
         }
-                .popup {
+        .popup {
             display: none;
             position: fixed;
             top: 0;
@@ -67,45 +67,57 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
+            justify-content: start;
             align-items: center;
-            z-index: 9999;
+            z-index: 999;
         }
-        
         .popup-content {
             background: #fff;
-            padding: 20px;
-            border-radius: 5px;
+            padding: 25px;
+            border-radius: 7px;
             text-align: center;
             position: relative;
             max-width: 400px;
             margin: 0 auto;
+            min-height: 100px; 
+            display:inline;
+            flex-direction:column;
+            justify-content: flex-end;
+            align-items: flex-end;
         }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #f00;
-            color: #fff;
+        .popup-content h2 {
+            margin-bottom: 0px;
+        }
+        .close-btn, .cancel-btn {
+            background-color: #f44336;
+            color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 10px 25px;
             cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: 2 4px 6px rgba(0, 0, 0, 0.2);
+            margin: 0px 0; 
         }
+        .close-btn:hover, .cancel-btn:hover {
+            background-color: #d32f2f;
+            transform: scale(1.05);
+        }
+        
     </style>
 </head>
 <body>
     <header>
         <h1>Street Vibes</h1>
-        <h3>El estilo perfecto para cada ocasion</h3>
+        <h3>El estilo perfecto para cada ocasión</h3>
         <nav>
-            <section id = "buttonin">
-            <ul>
-                <li><a href="hombre.html">Hombre</a></li>
-                <li><a href="mujer.html">Mujer</a></li>
-                <li><a href="contacto.html">Contacto</a></li>
-                <li><a href="compras.html">Carrito</a></li>
-            </ul>
+            <section id="buttonin">
+                <ul>
+                    <li><a href="hombre.html">Hombre</a></li>
+                    <li><a href="mujer.html">Mujer</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="compras.html">Carrito</a></li>
+                </ul>
             </section>
         </nav>
     </header>
@@ -116,9 +128,22 @@
         </div>
         <p class="total" id="total">Total: $0.00 MXN</p>
         <button class="vaciar-carrito" onclick="vaciarCarrito()">Vaciar Carrito</button>
+        <br><br>
+        <button class="btn-compra" onclick="comprarSeleccionados()">Comprar Seleccionados</button>
+    </div>
+
+    <!-- Popup para cancelar la compra -->
+    <div id="popup-cancelar" class="popup">
+        <div class="popup-content">
+            <h3>¿Confirmas la cancelación de la compra de este producto?</h3>
+            <button class="close-btn" onclick="cerrarPopup()">Cerrar</button>
+            <button class="cancel-btn" onclick="cancelarCompraConfirmada()">Confirmar Cancelación</button>
+        </div>
     </div>
 
     <script>
+        let productoCancelar = null;
+
         function mostrarCarrito() {
             const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             const carritoContenido = document.getElementById('carrito-contenido');
@@ -130,10 +155,15 @@
             carrito.forEach((producto, index) => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'carrito-item';
-                itemDiv.innerHTML = `
+                itemDiv.innerHTML = ` 
+                    <input type="checkbox" id="producto-${index}" class="checkbox-producto" ${producto.estado ? 'disabled' : ''}>
                     <p>${producto.nombre} (Talla: ${producto.talla})</p>
                     <p>$${producto.precio.toFixed(2)} MXN</p>
-                    <button onclick="eliminarProducto(${index})">Eliminar</button>
+                    ${producto.estado ? `<p class="en-proceso">En proceso de compra</p>` : ''}
+                    ${producto.estado ? 
+                        `<button class="cancelar-compra" onclick="cancelarCompra(${index})">Cancelar Compra</button>` : 
+                        `<button onclick="eliminarProducto(${index})">Eliminar</button>`
+                    }
                 `;
                 carritoContenido.appendChild(itemDiv);
                 total += producto.precio;
@@ -149,14 +179,59 @@
 
         function eliminarProducto(index) {
             const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            carrito.splice(index, 1);
-            localStorage.setItem('carrito', JSON.stringify(carrito));
-            mostrarCarrito();
+            if (!carrito[index].estado) {
+                carrito.splice(index, 1);
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                mostrarCarrito();
+            }
         }
 
         function vaciarCarrito() {
-            localStorage.removeItem('carrito');
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const carritoFiltrado = carrito.filter(producto => producto.estado); 
+            localStorage.setItem('carrito', JSON.stringify(carritoFiltrado));
             mostrarCarrito();
+        }
+
+        function comprarSeleccionados() {
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const productosSeleccionados = [];
+            const checkboxes = document.querySelectorAll('.checkbox-producto');
+
+            checkboxes.forEach((checkbox, index) => {
+                if (checkbox.checked && !carrito[index].estado) {
+                    productosSeleccionados.push(carrito[index]);
+                    carrito[index].estado = "En proceso de compra"; 
+                }
+            });
+
+            if (productosSeleccionados.length > 0) {
+                localStorage.setItem('carrito', JSON.stringify(carrito)); 
+                alert('Los siguientes productos están en proceso de compra: ' + productosSeleccionados.map(p => p.nombre).join(', '));
+                mostrarCarrito();
+            } else {
+                alert('No has seleccionado productos para comprar');
+            }
+        }
+
+        function cancelarCompra(index) {
+            productoCancelar = index; 
+            document.getElementById('popup-cancelar').style.display = 'flex';
+        }
+
+        function cerrarPopup() {
+            document.getElementById('popup-cancelar').style.display = 'none';
+            productoCancelar = null;
+        }
+
+        function cancelarCompraConfirmada() {
+            if (productoCancelar !== null) {
+                const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                carrito[productoCancelar].estado = null; 
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                mostrarCarrito();
+                cerrarPopup();
+            }
         }
 
         mostrarCarrito();

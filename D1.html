@@ -28,6 +28,7 @@
             <p class="precio">$159.90 MXN</p>
 
             <h3>Selecciona tu talla</h3>
+            <!-- ZONA DE COMPRAS -->
             <div class="tallas">
                 <button onclick="seleccionarTalla('CH', this)">CH</button>
                 <button onclick="seleccionarTalla('M', this)">M</button>
@@ -41,20 +42,17 @@
     <script>
         let tallaSeleccionada = null;
 
-        // Función para seleccionar una talla
         function seleccionarTalla(talla, boton) {
-            // Guardar la talla seleccionada
+        
             tallaSeleccionada = talla;
 
-            // Eliminar la clase "talla-seleccionada" de todos los botones
             const botones = document.querySelectorAll('.tallas button');
             botones.forEach(btn => btn.classList.remove('talla-seleccionada'));
 
-            // Agregar la clase "talla-seleccionada" al botón seleccionado
             boton.classList.add('talla-seleccionada');
         }
 
-        // Función para agregar al carrito
+        
         function agregarAlCarrito() {
             if (!tallaSeleccionada) {
                 alert("Por favor, selecciona una talla antes de agregar al carrito.");

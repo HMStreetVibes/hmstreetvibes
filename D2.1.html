@@ -14,36 +14,56 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="hombre.html">Hombre</a></li>
                 <li><a href="mujer.html">Mujer</a></li>
+                <li><a href="compras.html">Carrito</a></li>
             </ul>
         </nav>
     </header>
     <div class="producto-detalle">
         <div class="imagen-producto">
-            <img src="BearBlackbrown.jpg" alt="Court Vision Low" width="350">
-
+            <img src="BearBlackbrown.jpg" alt="T-Shirt Bear Black" width="350">
         </div>
         <div class="detalles-producto">
-            <h1>T-Shirt Bear Black </h1>
-            <p>Playera de algodon basica con estampado de oso. </p>
+            <h1>T-Shirt Bear Black</h1>
+            <p>Playera de algodón básica con estampado de oso.</p>
             <p class="precio">$199.85 MXN</p>
 
             <h3>Selecciona tu talla</h3>
+            <!-- ZONA DE COMPRAS -->
             <div class="tallas">
-                <button>CH</button>
-                <button>M</button>
-                <button>G</button>
-                <button>XL</button>
+                <button onclick="seleccionarTalla('CH', this)">CH</button>
+                <button onclick="seleccionarTalla('M', this)">M</button>
+                <button onclick="seleccionarTalla('G', this)">G</button>
+                <button onclick="seleccionarTalla('XL', this)">XL</button>
             </div>
 
-            <button class="btn-compra">Agregar al carrito</button>
+            <button class="btn-compra" onclick="agregarAlCarrito()">Agregar al carrito</button>
         </div>
     </div>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <h2>¡Contactanos por WhatsApp para concretar tu pedido!</h2>
-            <button class="close-btn">Cerrar</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+    <script>
+        let tallaSeleccionada = null;
+
+        function seleccionarTalla(talla, boton) {
+            tallaSeleccionada = talla;
+            const botones = document.querySelectorAll('.tallas button');
+            botones.forEach(btn => btn.classList.remove('talla-seleccionada'));
+            boton.classList.add('talla-seleccionada');
+        }
+
+        function agregarAlCarrito() {
+            if (!tallaSeleccionada) {
+                alert("Por favor, selecciona una talla antes de agregar al carrito.");
+                return;
+            }
+            const producto = {
+                nombre: "T-Shirt Bear Black",
+                precio: 199.85,
+                talla: tallaSeleccionada,
+            };
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            carrito.push(producto);
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            alert("Producto agregado al carrito.");
+        }
+    </script>
 </body>
 </html>

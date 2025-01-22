@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles del Producto - Playera Beige</title>
+    <title>Detalles del Producto - Playera Duck Cartoon Blue</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,31 +19,70 @@
     </header>
     <div class="producto-detalle">
         <div class="imagen-producto">
-            <img src="DuckBlue.jpg" alt="Court Vision Low" width="350">
-
+            <img src="DuckBlue.jpg" alt="Duck Cartoon Blue" width="350">
         </div>
         <div class="detalles-producto">
-            <h1>Duck Cartoon Blue </h1>
-            <p>Playera de algodon basica para hombre</p>
+            <h1>Duck Cartoon Blue</h1>
+            <p>Playera de algodón básica para hombre</p>
             <p class="precio">$250.00 MXN</p>
 
             <h3>Selecciona tu talla</h3>
             <div class="tallas">
-                <button>CH</button>
-                <button>M</button>
-                <button>G</button>
-                <button>XL</button>
+                <button onclick="seleccionarTalla('CH', this)">CH</button>
+                <button onclick="seleccionarTalla('M', this)">M</button>
+                <button onclick="seleccionarTalla('G', this)">G</button>
+                <button onclick="seleccionarTalla('XL', this)">XL</button>
             </div>
 
-            <button class="btn-compra">Agregar al carrito</button>
+            <button class="btn-compra" onclick="agregarAlCarrito()">Agregar al carrito</button>
         </div>
     </div>
     <div id="popup" class="popup">
         <div class="popup-content">
             <h2>Producto añadido al carrito</h2>
-            <button class="close-btn">Cerrar</button>
+            <button class="close-btn" onclick="cerrarPopup()">Cerrar</button>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script>
+        let tallaSeleccionada = null;
+
+        function seleccionarTalla(talla, boton) {
+            tallaSeleccionada = talla;
+
+            const botones = document.querySelectorAll('.tallas button');
+            botones.forEach(btn => btn.classList.remove('talla-seleccionada'));
+
+            boton.classList.add('talla-seleccionada');
+        }
+
+        function agregarAlCarrito() {
+            if (!tallaSeleccionada) {
+                alert("Por favor, selecciona una talla antes de agregar al carrito.");
+                return;
+            }
+
+            const producto = {
+                nombre: "Duck Cartoon Blue",
+                precio: 250.00,
+                talla: tallaSeleccionada,
+            };
+
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            carrito.push(producto);
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+
+            mostrarPopup();
+        }
+
+        function mostrarPopup() {
+            const popup = document.getElementById("popup");
+            popup.style.display = "block";
+        }
+
+        function cerrarPopup() {
+            const popup = document.getElementById("popup");
+            popup.style.display = "none";
+        }
+    </script>
 </body>
 </html>
